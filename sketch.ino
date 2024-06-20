@@ -6,6 +6,12 @@
 #define ENCODER_DT 7
 #define ENCODER_SW 8
 
+#define BUZZER 27
+
+float notes[12] {
+    261.63,277.18,293.66,311.13,329.63,349.23,369.99,392,415.3,440,466.16,493.88
+};
+
 DisplaySSD1306_128x64_I2C display(-1);
 
 void setup() {
@@ -49,6 +55,7 @@ void readbutton() {
 }
 
 void updatedisplay() {
+  tone(BUZZER, notes[add_counter], 100);
   display.clear();
   display.setFixedFont( courier_new_font11x16_digits );
   display.printFixed(0,8,String(add_counter).c_str(), STYLE_NORMAL);
