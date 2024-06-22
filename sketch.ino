@@ -1,6 +1,7 @@
 // Now turn this trash into treasure!
 
 #include <lcdgfx.h>
+#include <LedControl.h>
 
 #define ENCODER_CLK 6
 #define ENCODER_DT 7
@@ -11,6 +12,10 @@
 float notes[12] {
     261.63,277.18,293.66,311.13,329.63,349.23,369.99,392,415.3,440,466.16,493.88
 };
+
+int tickets = 0;
+
+LedControl matrixdisplay = LedControl(7, 6, 8, 1);
 
 DisplaySSD1306_128x64_I2C display(-1);
 
@@ -50,12 +55,24 @@ void readEncoder() {
 
 void readbutton() {
   Serial1.println("Input placed with a count of: " + String(add_counter));
+  
+  for (int i = 0; i<=add_counter; i++) {
+    int led = tickets + i;
+    matrixdisplay.setLed(1, led%8, floor(led/8), true);
+  }
+  tickets += add_counter;
   add_counter = 0;
   updatedisplay();
 }
 
 void updatedisplay() {
-  tone(BUZZER, notes[add_counter], 100);
+  if (add_counter < 0){
+    tone(BUZZER, notes[0], 100);
+  }else if (add_counter < 12) {
+    tone(BUZZER, notes[add_counter-1], 100);
+  }else {
+    tone(BUZZER, notes[11], 100);
+  }
   display.clear();
   display.setFixedFont( courier_new_font11x16_digits );
   display.printFixed(0,8,String(add_counter).c_str(), STYLE_NORMAL);
