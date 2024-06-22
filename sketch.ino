@@ -15,7 +15,7 @@ float notes[12] {
 
 int tickets = 0;
 
-LedControl matrixdisplay = LedControl(7, 6, 8, 1);
+LedControl matrixdisplay = LedControl(17, 19, 18, 1);
 
 DisplaySSD1306_128x64_I2C display(-1);
 
@@ -58,7 +58,7 @@ void readbutton() {
   
   for (int i = 0; i<=add_counter; i++) {
     int led = tickets + i;
-    matrixdisplay.setLed(1, led%8, floor(led/8), true);
+    matrixdisplay.setLed(0, led%8, floor(led/8), true);
   }
   tickets += add_counter;
   add_counter = 0;
