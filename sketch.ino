@@ -3,9 +3,14 @@
 #include <lcdgfx.h>
 #include <MD_MAX72xx.h>
 
+
 #define ENCODER_CLK 6
 #define ENCODER_DT 7
 #define ENCODER_SW 8
+
+#define	CLK_PIN		13
+#define	DATA_PIN	11
+#define	CS_PIN		10
 
 #define BUZZER 27
 
@@ -15,7 +20,7 @@ float notes[12] {
 
 int tickets = 0;
 
-MD_MAX72XX mx = MD_MAX72XX(MD_MAX72XX::PAROLA_HW, 10, 1);
+MD_MAX72XX mx = MD_MAX72XX(MD_MAX72XX::PAROLA_HW, CS_PIN, 1);
 
 DisplaySSD1306_128x64_I2C display(-1);
 
@@ -33,10 +38,9 @@ void setup() {
   display.printFixed(0,8,"0", STYLE_NORMAL);
 
   mx.begin();
-  mx.control(MD_MAX72XX::INTENSITY, MAX_INTENSITY / 2);
+  mx.control(MD_MAX72XX::INTENSITY, MAX_INTENSITY/2);
+  mx.control(MD_MAX72XX::UPDATE, MD_MAX72XX::ON);
   mx.clear();
-  mx.setPoint(1, 1, true);
-  mx.update();
 
   // pinMode(BUTTON, INPUT_PULLUP);
   pinMode(ENCODER_CLK, INPUT);
@@ -86,8 +90,10 @@ void updatedisplay() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  delay(1); // this speeds up the simulation
+  delay(100); // this speeds up the simulation
   // if (digitalRead(BUTTON) == LOW) {
   //   Serial1.println("Button is a go");
   // }
+  mx.setPoint(1, 1, true);
+  mx.update();
 }
