@@ -1,7 +1,7 @@
 // Now turn this trash into treasure!
 
 #include <lcdgfx.h>
-#include <LedControl.h>
+#include <MD_MAX72xx.h>
 
 #define ENCODER_CLK 6
 #define ENCODER_DT 7
@@ -15,7 +15,7 @@ float notes[12] {
 
 int tickets = 0;
 
-LedControl matrixdisplay=LedControl(12,11,10,1); 
+MD_MAX72XX mx = MD_MAX72XX(MD_MAX72XX::PAROLA_HW, 10, 1);
 
 DisplaySSD1306_128x64_I2C display(-1);
 
@@ -32,7 +32,11 @@ void setup() {
 
   display.printFixed(0,8,"0", STYLE_NORMAL);
 
-  matrixdisplay.shutdown(0, false);
+  mx.begin();
+  mx.control(MD_MAX72XX::INTENSITY, MAX_INTENSITY / 2);
+  mx.clear();
+  mx.setPoint(1, 1, true);
+  mx.update();
 
   // pinMode(BUTTON, INPUT_PULLUP);
   pinMode(ENCODER_CLK, INPUT);
@@ -57,15 +61,10 @@ void readEncoder() {
 
 void readbutton() {
   Serial1.println("Input placed with a count of: " + String(add_counter));
-  
-  matrixdisplay.setLed(0, 1,1, true);
-  matrixdisplay.setLed(1, 1,1, true);
-  matrixdisplay.setLed(2, 1,1, true);
-
 
   for (int i = 0; i<=add_counter; i++) {
     int led = tickets + i;
-    matrixdisplay.setLed(0, led%8, floor(led/8), true);
+    // update leds
   }
   tickets += add_counter;
   add_counter = 0;

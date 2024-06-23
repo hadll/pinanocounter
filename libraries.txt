@@ -2,4 +2,4 @@
 # See https://docs.wokwi.com/guides/libraries
 
 lcdgfx
-LedControl
+MD_MAX72XX
