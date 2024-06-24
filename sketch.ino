@@ -19,10 +19,20 @@ float notes[12] {
 };
 
 int tickets = 0;
-
-MD_MAX72XX mx = MD_MAX72XX(MD_MAX72XX::PAROLA_HW, CS_PIN, 1);
+int add_counter = 0;
 
 DisplaySSD1306_128x64_I2C display(-1);
+int display_width = 128;
+int display_height = 64;
+
+int ui_mode = -1;
+
+String main_menu_items[3] {
+  "add / remove",
+  "visualise progress",
+  "set goal"
+};
+
 
 void setup() {
   // put your setup code here, to run once:
@@ -33,14 +43,9 @@ void setup() {
 
   display.clear();
 
-  display.setFixedFont( ssd1306xled_font6x8 );
+  display.setFixedFont( courier_new_font11x16_digits );
 
-  display.printFixed(0,8,"0", STYLE_NORMAL);
-
-  mx.begin();
-  mx.control(MD_MAX72XX::INTENSITY, MAX_INTENSITY/2);
-  mx.control(MD_MAX72XX::UPDATE, MD_MAX72XX::ON);
-  mx.clear();
+  updatedisplay();
 
   // pinMode(BUTTON, INPUT_PULLUP);
   pinMode(ENCODER_CLK, INPUT);
@@ -50,7 +55,15 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(ENCODER_SW), readbutton, FALLING);
 }
 
-int add_counter = 0;
+void displayListMenu(String menu_items[3],int scroll) {
+  for (int i = 0; i<3; i++){
+    if (i+scroll > 3){ // make sure we dont exceed the array
+      break;
+    }
+    display.printFixed(0, display_height/4*(i+1), menu_items[i+scroll].c_str(), STYLE_NORMAL);
+  }
+  
+}
 
 void readEncoder() {
   int dtValue = digitalRead(ENCODER_DT);
@@ -64,36 +77,45 @@ void readEncoder() {
 }
 
 void readbutton() {
-  Serial1.println("Input placed with a count of: " + String(add_counter));
+  switch (ui_mode){
+    case 1:
+      Serial1.println("Input placed with a count of: " + String(add_counter));
 
-  for (int i = 0; i<=add_counter; i++) {
-    int led = tickets + i;
-    // update leds
+      for (int i = 0; i<=add_counter; i++) {
+        int led = tickets + i;
+        // update leds
+      }
+      tickets += add_counter;
+      add_counter = 0;
+      updatedisplay();
+      break;
   }
-  tickets += add_counter;
-  add_counter = 0;
-  updatedisplay();
 }
 
 void updatedisplay() {
-  if (add_counter < 0){
-    tone(BUZZER, notes[0], 100);
-  }else if (add_counter < 12) {
-    tone(BUZZER, notes[add_counter-1], 100);
-  }else {
-    tone(BUZZER, notes[11], 100);
-  }
   display.clear();
-  display.setFixedFont( courier_new_font11x16_digits );
-  display.printFixed(0,8,String(add_counter).c_str(), STYLE_NORMAL);
+  switch (ui_mode){
+    case -1: // main menu
+      displayListMenu(main_menu_items, 0);
+    case 1: // add menu
+      if (add_counter < 0){
+        tone(BUZZER, notes[0], 100);
+      }else if (add_counter < 12) {
+        tone(BUZZER, notes[add_counter-1], 100);
+      }else {
+        tone(BUZZER, notes[11], 100);
+      }
+      display.clear();
+      display.printFixed(0,8,String(add_counter).c_str(), STYLE_NORMAL);
+      break;
+  }
+  
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  delay(100); // this speeds up the simulation
+  delay(1); // this speeds up the simulation
   // if (digitalRead(BUTTON) == LOW) {
   //   Serial1.println("Button is a go");
   // }
-  mx.setPoint(1, 1, true);
-  mx.update();
 }

@@ -5,26 +5,13 @@
   "parts": [
     { "type": "board-pi-pico-w", "id": "pico", "top": -3.25, "left": 3.55, "attrs": {} },
     {
-      "type": "wokwi-max7219-matrix",
-      "id": "wokwi-max7219-matrix-0",
-      "top": 240.6,
-      "left": -245.79,
-      "attrs": {}
-    },
-    {
       "type": "board-ssd1306",
       "id": "board-ssd1306-0",
       "top": 70.34,
       "left": -230.17,
       "attrs": {}
     },
-    {
-      "type": "wokwi-neopixel",
-      "id": "wokwi-neopixel-0",
-      "top": 246.1,
-      "left": 229.4,
-      "attrs": {}
-    },
+    { "type": "wokwi-neopixel", "id": "wokwi-neopixel-0", "top": 246.1, "left": -1, "attrs": {} },
     { "type": "wokwi-buzzer", "id": "wokwi-buzzer-0", "top": -122.4, "left": 117, "attrs": {} },
     { "type": "wokwi-ky-040", "id": "wokwi-ky-040-0", "top": 155.3, "left": -231.2, "attrs": {} }
   ],
@@ -40,11 +27,6 @@
     [ "wokwi-ky-040-0:GND", "pico:GND.3", "black", [ "h67.2", "v-76" ] ],
     [ "wokwi-buzzer-0:2", "pico:GP27", "red", [ "v0" ] ],
     [ "wokwi-buzzer-0:1", "pico:GND.7", "black", [ "v0" ] ],
-    [ "wokwi-max7219-matrix-0:GND", "pico:GND.4", "black", [ "h105.6", "v-96.04" ] ],
-    [ "wokwi-max7219-matrix-0:DIN", "pico:GP11", "blue", [ "h115.2", "v-134.4" ] ],
-    [ "wokwi-max7219-matrix-0:CS", "pico:GP10", "green", [ "h124.8", "v-153.6" ] ],
-    [ "wokwi-max7219-matrix-0:CLK", "pico:GP13", "gold", [ "h134.4", "v-9.6" ] ],
-    [ "wokwi-max7219-matrix-0:V+", "pico:VBUS", "red", [ "h96", "v-278.4", "h114.89" ] ],
     [ "board-ssd1306-0:VCC", "pico:VBUS", "red", [ "v-96", "h259.35" ] ],
     [ "wokwi-ky-040-0:VCC", "pico:VBUS", "red", [ "h76.8", "v-210.8", "h115.2" ] ]
   ],
